@@ -1,0 +1,72 @@
+{
+  "name": "nmeatools",
+  "displayName": "NMEA Tools",
+  "description": "NMEA Tools extension provides useful features when working with NMEA sentences.",
+  "icon": "images/nmeatools.png",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.87.0"
+  },
+  "publisher": "danny-mhlv",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Communication-and-Radionavigation-SPb/nmeacalc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Communication-and-Radionavigation-SPb/nmeacalc/issues"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "nmea",
+    "checksum",
+    "calculator",
+    "tools",
+    "marine"
+  ],
+  "pricing": "Free",
+  "license": "Apache-2.0",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "nmeacalc.computeChecksum",
+        "title": "Calculate NMEA Checksum"
+      },
+      {
+        "command": "nmeatools.computeChecksumClipboard",
+        "title": "Calculate NMEA Checksum (From clipboard)"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "ext-test": "vscode-test",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "18.x",
+    "@types/vscode": "^1.87.0",
+    "@typescript-eslint/eslint-plugin": "^7.4.0",
+    "@typescript-eslint/parser": "^7.4.0",
+    "@vscode/test-cli": "^0.0.8",
+    "@vscode/test-electron": "^2.3.9",
+    "eslint": "^8.57.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^8.4.1"
+  }
+}
