@@ -10,10 +10,10 @@
   "publisher": "danny-mhlv",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Communication-and-Radionavigation-SPb/nmeacalc.git"
+    "url": "https://github.com/Communication-and-Radionavigation-SPb/nmeatools.git"
   },
   "bugs": {
-    "url": "https://github.com/Communication-and-Radionavigation-SPb/nmeacalc/issues"
+    "url": "https://github.com/Communication-and-Radionavigation-SPb/nmeatools/issues"
   },
   "categories": [
     "Other"
