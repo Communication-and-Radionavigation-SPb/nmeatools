@@ -28,18 +28,25 @@
   "pricing": "Free",
   "license": "Apache-2.0",
   "activationEvents": [
-    "onStartupFinished"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "nmeacalc.computeChecksum",
+        "command": "nmeatools.computeChecksum",
         "title": "Calculate NMEA Checksum"
       },
       {
         "command": "nmeatools.computeChecksumClipboard",
         "title": "Calculate NMEA Checksum (From clipboard)"
+      },
+      {
+        "command": "nmeatools.computeChecksumCurrentLine",
+        "title": "Calculate NMEA Checksum (Current line)"
+      },
+      {
+        "command": "nmeatools.computeChecksumSelection",
+        "title": "Calculate NMEA Checksum (Selection)"
       }
     ]
   },

@@ -2,6 +2,8 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 import * as nmea from "./checksum";
+import * as helpers from "./helpers";
+import SelectionResult from "./selection-result";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -11,7 +13,7 @@ export function activate(context: vscode.ExtensionContext) {
   console.log('Congratulations, your extension "nmeatools" is now active!');
 
   let calcTextboxDisposable = vscode.commands.registerCommand(
-    "nmeacalc.computeChecksum",
+    "nmeatools.computeChecksum",
     async () => {
       const input = await vscode.window.showInputBox({
         ignoreFocusOut: true,
@@ -26,6 +28,7 @@ export function activate(context: vscode.ExtensionContext) {
 
       if (!nmea.validate(input)) {
         vscode.window.showErrorMessage("Invalid NMEA Sentence!");
+        return;
       }
 
       const checksum = nmea.calculateChecksum(input);
@@ -38,7 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(calcTextboxDisposable);
 
   let calcClipboardDisposable = vscode.commands.registerCommand(
-    "nmeacalc.computeChecksumClipboard",
+    "nmeatools.computeChecksumClipboard",
     async () => {
       const clipboardContents = await vscode.env.clipboard.readText();
 
@@ -55,6 +58,64 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
   context.subscriptions.push(calcClipboardDisposable);
+
+  let calcSelectionDisposable = vscode.commands.registerCommand(
+    "nmeatools.computeChecksumSelection",
+    async () => {
+      const activeEditor = vscode.window.activeTextEditor;
+      if (!activeEditor) {
+        vscode.window.showErrorMessage("No file opened, nothing to select :(");
+        return;
+      }
+      
+      const selections = activeEditor.selections;
+      selections.forEach((selection) => {
+        let results: SelectionResult = new SelectionResult();
+
+        for (let linenum = selection.start.line; linenum <= selection.end.line; linenum++) {
+          const lineContents = activeEditor.document.lineAt(linenum).text;
+          
+          if (!nmea.validate(lineContents)) {
+            results.addBad(linenum, "Invalid NMEA Sentence!");
+            continue;
+          }
+          
+          results.addGood(linenum, nmea.calculateChecksum(lineContents));
+        }
+
+        vscode.window.showInformationMessage(
+          helpers.formSelectionReport(results), { modal: true }
+        );
+      });
+    }
+  );
+  context.subscriptions.push(calcSelectionDisposable);
+
+  let calcCurrentLineDisposable = vscode.commands.registerCommand(
+    "nmeatools.computeChecksumCurrentLine",
+    async () => {
+      const activeEditor = vscode.window.activeTextEditor;
+      if (!activeEditor) {
+        vscode.window.showErrorMessage("No file opened, nothing to select :(");
+        return;
+      }
+      
+      const currentPos = activeEditor.selection.active;
+      const lineContents = activeEditor.document.lineAt(currentPos).text;
+
+      if (!nmea.validate(lineContents)) {
+        vscode.window.showErrorMessage("Invalid NMEA Sentence!");
+        return;
+      }
+
+      const checksum: number = nmea.calculateChecksum(lineContents);
+
+      vscode.window.showInformationMessage(
+        "Result is: " + checksum.toString(16)
+      );
+    }
+  );
+  context.subscriptions.push(calcCurrentLineDisposable);
 }
 
 // This method is called when your extension is deactivated
